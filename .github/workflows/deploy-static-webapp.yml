@@ -26,6 +26,13 @@ on:
         required: false
         type: boolean
         default: false
+      app-directory:
+        required: false
+        type: string
+        default: '/'
+      api-directory:
+        required: false
+        type: string
     outputs:
       static_web_app_url: 
         description: deployed web app url
@@ -68,7 +75,8 @@ jobs:
           azure_static_web_apps_api_token: ${{ steps.swa_secret.outputs.secret }}
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
-          app_location: "/"
+          app_location: ${{ inputs.app-directory }}
+          api_location: ${{ inputs.api-directory }}
           skip_api_build: ${{ inputs.build-api == false }}
 
       - name: Show the deployed app url
