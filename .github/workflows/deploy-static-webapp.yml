@@ -22,10 +22,6 @@ on:
       environment:
         required: false
         type: string
-      build-api:
-        required: false
-        type: boolean
-        default: false
       app-directory:
         required: false
         type: string
@@ -77,7 +73,6 @@ jobs:
           action: "upload"
           app_location: ${{ inputs.app-directory }}
           api_location: ${{ inputs.api-directory }}
-          skip_api_build: ${{ inputs.build-api == false }}
 
       - name: Show the deployed app url
         run: |
