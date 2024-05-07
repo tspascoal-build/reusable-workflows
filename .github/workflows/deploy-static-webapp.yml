@@ -1,0 +1,73 @@
+name: Deploy Azure Static Web App
+
+on:
+  workflow_call:
+    inputs:
+      client-id:
+        description: Azure service principal client id
+        required: true        
+        type: string
+      tenant-id:
+        description: Azure Tenant identifier
+        required: true
+        type: string
+      subscription-id: 
+        description: Azure subscription identifier
+        required: true
+        type: string
+      name: 
+        description: The static web app name
+        required: true
+        type: string
+      environment:
+        required: false
+        type: string
+    outputs:
+      static_web_app_url: 
+        description: deployed web app url
+        value: ${{ jobs.deploy.outputs.static_web_app_url }}     
+
+jobs:
+  deploy:
+    name: Deploy to Azure
+    runs-on: ubuntu-latest
+
+    environment: 
+      name: ${{ inputs.environment }}
+      url:  ${{ steps.builddeploy.outputs.static_web_app_url }}
+    
+    outputs:
+      static_web_app_url: ${{ steps.builddeploy.outputs.static_web_app_url }}
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v3
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ inputs.client-id }}
+          tenant-id: ${{ inputs.tenant-id }}
+          subscription-id: ${{ inputs.subscription-id }}
+          
+      - name: Get Web App Deploy Secret
+        id: swa_secret
+        run: |
+          secretvalue=$(az staticwebapp secrets list --name "$name" --query properties.apiKey --output tsv)
+          echo "::add-mask::$secretvalue"
+          echo "secret=$secretvalue" >> $GITHUB_OUTPUT          
+        env:
+          name: ${{ inputs.name }}          
+
+      - name: Deploy to Azure Static Web Apps
+        uses: azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9
+        id: builddeploy
+        with:
+          azure_static_web_apps_api_token: ${{ steps.swa_secret.outputs.secret }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+          app_location: "/"
+          api_location: "/api"
+
+      - name: Show the deployed app url
+        run: |
+          echo '::notice title=Deployed App Url::${{ steps.builddeploy.outputs.static_web_app_url }}'
+          echo '## :rocket: Your site is available [at](${{ steps.builddeploy.outputs.static_web_app_url }})' >> $GITHUB_STEP_SUMMARY
