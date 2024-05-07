@@ -62,7 +62,7 @@ jobs:
           name: ${{ inputs.name }}          
 
       - name: Deploy to Azure Static Web Apps
-        uses: azure/static-web-apps-deploy@1a947af9992250f3bc2e68ad0754c0b0c11566c9
+        uses: azure/static-web-apps-deploy@c514ae36604047560e33605b78f71804967bfb7a
         id: builddeploy
         with:
           azure_static_web_apps_api_token: ${{ steps.swa_secret.outputs.secret }}
