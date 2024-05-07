@@ -26,9 +26,6 @@ on:
         required: false
         type: string
         default: '/'
-      api-directory:
-        required: false
-        type: string
     outputs:
       static_web_app_url: 
         description: deployed web app url
@@ -72,7 +69,6 @@ jobs:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
           action: "upload"
           app_location: ${{ inputs.app-directory }}
-          api_location: ${{ inputs.api-directory }}
 
       - name: Show the deployed app url
         run: |
