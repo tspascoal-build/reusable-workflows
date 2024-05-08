@@ -76,7 +76,7 @@ jobs:
 
       - name: warmup
         run: |
-          curl `${{ steps.builddeploy.outputs.static_web_app_url }}` --silent & -o /dev/null
+          curl `${{ steps.builddeploy.outputs.static_web_app_url }}` --silent -o /dev/null &
 
       - name: Show the deployed app url
         run: |
