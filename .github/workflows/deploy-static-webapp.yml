@@ -26,6 +26,10 @@ on:
         required: false
         type: string
         default: '/'
+      runner:
+        required: false
+        type: string
+        default: ubuntu-latest
     outputs:
       static_web_app_url: 
         description: deployed web app url
@@ -34,7 +38,7 @@ on:
 jobs:
   deploy:
     name: Deploy to Azure
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runner }}
 
     environment: 
       name: ${{ inputs.environment }}
