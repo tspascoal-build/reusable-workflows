@@ -73,4 +73,4 @@ jobs:
       - name: Show the deployed app url
         run: |
           echo '::notice title=Deployed App Url::${{ steps.builddeploy.outputs.static_web_app_url }}'
-          echo '## :rocket: Your site is available [at](${{ steps.builddeploy.outputs.static_web_app_url }})' >> $GITHUB_STEP_SUMMARY
+          echo '## :rocket: Your ${{ inputs.environment }} site is available [at](${{ steps.builddeploy.outputs.static_web_app_url }})' >> $GITHUB_STEP_SUMMARY
